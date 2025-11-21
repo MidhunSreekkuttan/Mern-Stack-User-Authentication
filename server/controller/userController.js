@@ -29,13 +29,13 @@ export const register = async (req, res) => {
 
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' })
 
-        // res.cookie('userDate', token, {
-        //     httpOnly: true,
-        //     secure: process.env.NODE_ENV === 'production',
-        //     sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
-        //     maxAge: 7 * 24 * 60 * 60 * 1000
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+            maxAge: 7 * 24 * 60 * 60 * 1000
 
-        // })
+        })
 
         return res.json({ success: true, message: "user registered" })
 
@@ -63,10 +63,10 @@ export const login = async (req, res) => {
 
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' })
 
-        res.cookie('userDate', token, {
+        res.cookie('token', token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
             maxAge: 7 * 24 * 60 * 60 * 1000
         })
 
@@ -90,7 +90,7 @@ export const logout = (req, res) => {
 
     try {
 
-        res.clearCookie('userDate', {
+        res.clearCookie('token', {
             httpOnly: true,
             secure: false,
             sameSite: true
@@ -176,11 +176,11 @@ export const verifyEmail = async (req, res) => {
 export const isLogedIn = (req, res) => {
     try {
 
-        return res.json({ success: true, message: "User Already Logged In" })
+        return res.json({ success: true })
 
     } catch (error) {
 
-        return res.json({ message: error.message })
+        return res.json({ success: false, message: error.message })
 
     }
 }

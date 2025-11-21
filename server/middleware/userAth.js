@@ -1,20 +1,20 @@
 import jwt from 'jsonwebtoken'
 
 const userAuth = async (req, res, next) => {
-    const { userDate } = req.cookies
+    const { token } = req.cookies
 
     try {
-        if (!userDate) {
+        if (!token) {
             return res.status(401).json({ success: false, message: "Not Authorized plz Login" });
         }
 
-        const decoded = jwt.verify(userDate, process.env.JWT_SECRET);
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-        if (!decoded.id) {
-            return res.json({ success: false, message: "plz Login again" })
+        if (decoded.id) {
+            req.user = { id: decoded.id }
+        } else {
+            return res.json({ success: false, message: 'Plz Login Again' })
         }
-
-        req.user = { id: decoded.id }
 
         next();
 
