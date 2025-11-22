@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import assets from '../assets/assets.js'
 import { useNavigate } from 'react-router-dom'
 import { AppContext } from '../context/App.Context.jsx'
@@ -11,13 +11,32 @@ const Login = () => {
 
   axios.defaults.withCredentials = true;
 
-
   const { BackendUrl, setIsLogin, getUserData } = useContext(AppContext)
 
   const [state, setState] = useState('Sign Up')
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+
+  const isVerifyEmail = async () => {
+
+    try {
+
+      const { data } = await axios.post(BackendUrl + '/api/user/sendVerifyOtp')
+
+      if (data.success) {
+        navigate('/verifyOtp')
+        toast.success(data.message)
+      } else {
+        toast.error(data.message)
+      }
+
+    } catch (error) {
+
+      toast.error(error.message);
+
+    }
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,8 +47,7 @@ const Login = () => {
         const { data } = await axios.post(BackendUrl + '/api/user/register', { name, email, password });
 
         if (data.success) {
-          setIsLogin(true);
-          getUserData();
+          toast.success(data.message)
         } else {
           toast.error(data.message);
         }
@@ -37,19 +55,17 @@ const Login = () => {
         const { data } = await axios.post(BackendUrl + '/api/user/login', { email, password });
 
         if (data.success) {
-          setIsLogin(true);
-          getUserData();
-          navigate('/');
+          isVerifyEmail()
         } else {
           toast.error(data.message);
         }
       }
     } catch (error) {
+
       toast.error(error.message);
+
     }
   };
-
-
 
   return (
     <div className='flex items-center justify-center min-h-screen px-6

@@ -7,6 +7,8 @@ export const AppContext = createContext()
 
 export const AppContextProvider = (props) => {
 
+    axios.defaults.withCredentials = true;
+
     const BackendUrl = import.meta.env.VITE_BACKEND_URL
 
     const [isLogin, setIsLogin] = useState(false)
@@ -41,6 +43,7 @@ export const AppContextProvider = (props) => {
             toast.error(error.message)
 
         }
+
     }
 
     useEffect(() => {
