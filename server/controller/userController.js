@@ -29,13 +29,13 @@ export const register = async (req, res) => {
 
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' })
 
-        res.cookie('token', token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
-            maxAge: 7 * 24 * 60 * 60 * 1000
+        // res.cookie('token', token, {
+        //     httpOnly: true,
+        //     secure: process.env.NODE_ENV === 'production',
+        //     sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+        //     maxAge: 7 * 24 * 60 * 60 * 1000
 
-        })
+        // })
 
         return res.json({ success: true, message: "user registered" })
 
@@ -112,7 +112,7 @@ export const sendVerifyOtp = async (req, res) => {
 
         const user = await userModel.findById(userId)
         if (!userId || !user) {
-            return res.json({ message: "plz register" })
+            return res.json({ success: false, message: "plz register" })
         }
 
         if (user.isVerified) {
@@ -137,7 +137,7 @@ export const sendVerifyOtp = async (req, res) => {
 
     } catch (error) {
 
-        return res.json({ message: error.message })
+        return res.json({ success: false, message: error.message })
 
     }
 }
@@ -149,15 +149,15 @@ export const verifyEmail = async (req, res) => {
     try {
 
         if (!userId || !otp) {
-            return res.json({ message: "Something Wrong oomb" })
+            return res.json({ success: false, message: "Something Wrong oomb" })
         }
 
         const user = await userModel.findById(userId)
         if (!user) {
-            return res.json({ message: "user is not existed" })
+            return res.json({ success: false, message: "user is not existed" })
         }
         if (user.otp !== otp || user.otp === '') {
-            return res.json({ message: "Otp is Missing" })
+            return res.json({ success: false, message: "Otp is Missing" })
         }
 
         user.isVerified = true
@@ -168,7 +168,7 @@ export const verifyEmail = async (req, res) => {
 
     } catch (error) {
 
-        return res.json({ message: error.message })
+        return res.json({ success: false, message: error.message })
 
     }
 }
