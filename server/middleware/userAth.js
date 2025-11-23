@@ -5,7 +5,7 @@ const userAuth = async (req, res, next) => {
 
     try {
         if (!token) {
-            return res.status(401).json({ success: false, message: "Not Authorized plz Login" });
+            return res.json({ success: false, message: "Not Authorized plz Login" });
         }
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
