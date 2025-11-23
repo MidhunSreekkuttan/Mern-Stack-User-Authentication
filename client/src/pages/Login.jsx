@@ -9,9 +9,7 @@ const Login = () => {
 
   const navigate = useNavigate()
 
-  axios.defaults.withCredentials = true;
-
-  const { BackendUrl, setIsLogin, getUserData } = useContext(AppContext)
+  const { BackendUrl, setIsLogin, getUserData, userData } = useContext(AppContext)
 
   const [state, setState] = useState('Sign Up')
   const [name, setName] = useState('')
@@ -43,10 +41,13 @@ const Login = () => {
 
     try {
 
+      axios.defaults.withCredentials = true;
+
       if (state === 'Sign Up') {
         const { data } = await axios.post(BackendUrl + '/api/user/register', { name, email, password });
 
         if (data.success) {
+          setIsLogin(true)
           toast.success(data.message)
         } else {
           toast.error(data.message);
@@ -55,7 +56,12 @@ const Login = () => {
         const { data } = await axios.post(BackendUrl + '/api/user/login', { email, password });
 
         if (data.success) {
-          isVerifyEmail()
+          {
+            userData.isVerified === false ? isVerifyEmail() :
+              setIsLogin(true)
+            getUserData(true)
+            navigate('/')
+          }
         } else {
           toast.error(data.message);
         }
