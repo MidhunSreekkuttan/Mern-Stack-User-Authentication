@@ -68,7 +68,7 @@ const VerifyOtp = () => {
     <div className='flex items-center justify-center min-h-screen
      bg-linear-to-br from-blue-200 to-purple-400'>
 
-      <img onClick={() => navigate('/')} src={assets.logo} alt="" className='absolute left-5 top-5 cursor-pointer w-20' />
+      <img src={assets.logo} alt="" className='absolute left-5 top-5 w-20' />
 
       <form onSubmit={submitHandler} className='bg-slate-900 p-8 rounded-lg shadow-lg w-96 text-sm'>
         <h1 className='text-white text-2xl font-semibold text-center mb-4'>Email Verify OTP</h1>
