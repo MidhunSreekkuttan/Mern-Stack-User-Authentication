@@ -53,15 +53,20 @@ const Login = () => {
           toast.error(data.message);
         }
       } else {
+
         const { data } = await axios.post(BackendUrl + '/api/user/login', { email, password });
 
         if (data.success) {
-          {
-            userData.isVerified === false ? isVerifyEmail() :
-              setIsLogin(true)
-            getUserData(true)
+
+          if (!data.user.isVerified) {
+            return isVerifyEmail()
+          } else {
+
+            setIsLogin(true)
+            getUserData()
             navigate('/')
           }
+
         } else {
           toast.error(data.message);
         }
