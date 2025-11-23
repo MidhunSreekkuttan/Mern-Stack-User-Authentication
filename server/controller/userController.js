@@ -2,6 +2,7 @@ import userModel from "../data-base/models/userModel.js"
 import bcrypt from 'bcrypt'
 import transporter from "../middleware/transpoter.js"
 import jwt from 'jsonwebtoken'
+import { welcomeTemplate } from "./emailTemplate.js"
 
 export const register = async (req, res) => {
     const { name, email, password } = req.body
@@ -22,7 +23,8 @@ export const register = async (req, res) => {
             from: process.env.SEND_MAIL,
             to: email,
             subject: 'Welcome Message',
-            text: `Hey ${name} Welcome to our WebSite ${email} its Your Email ID`
+            // text: `Hey ${name} Welcome to our WebSite ${email} its Your Email ID`
+            html: welcomeTemplate
         }
 
         await transporter.sendMail(mailOptions)
