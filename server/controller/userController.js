@@ -2,7 +2,7 @@ import userModel from "../data-base/models/userModel.js"
 import bcrypt from 'bcrypt'
 import transporter from "../middleware/transpoter.js"
 import jwt from 'jsonwebtoken'
-import { welcomeTemplate } from "./emailTemplate.js"
+import { emailOtpTemplate, welcomeTemplate } from "./emailTemplate.js"
 
 export const register = async (req, res) => {
     const { name, email, password } = req.body
@@ -20,7 +20,7 @@ export const register = async (req, res) => {
         await user.save()
 
         const mailOptions = {
-            from: process.env.SEND_MAIL,
+            from: '"Midhun" <midhunmns987@gmail.com>',
             to: email,
             subject: 'Welcome Message',
             // text: `Hey ${name} Welcome to our WebSite ${email} its Your Email ID`
@@ -127,10 +127,10 @@ export const sendVerifyOtp = async (req, res) => {
         await user.save()
 
         const mailOptions = {
-            from: process.env.SEND_MAIL,
+            from: '"Midhun" <midhunmns987@gmail.com>',
             to: user.email,
             subject: 'Verification OTP',
-            text: `Your opt =${otp}`
+            html: emailOtpTemplate.replace("{{OTP_CODE}}", otp).replace("{{VERIFY_URL}}", user.email)
         }
 
         await transporter.sendMail(mailOptions)
